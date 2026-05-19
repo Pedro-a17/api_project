@@ -49,9 +49,12 @@ namespace PokeShop.Application.Services
                 CoinsAdjustment = $"- {outPokemonCenter.MarketPrice:C0}"
             };
 
+            outPokemonCenter.Pokemon.OwnerId = user.Id;
+
+            user.Coins -= outPokemonCenter.MarketPrice;
+
             await _repository.SavePurchaseAsync(transaction, outPokemonCenter);
 
-            outPokemonCenter.Pokemon.OwnerId = user.Id;
 
             var value = outPokemonCenter.MarketPrice;
 

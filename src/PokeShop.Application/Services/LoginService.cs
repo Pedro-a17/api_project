@@ -26,6 +26,8 @@ namespace PokeShop.Application.Services
                 };
 
                 await _repository.CreateUserAsync(user);
+                
+                return new LoginResultDto("Login succeed", user.UserName, user.Coins);
             }
 
             if (user.PasswordHash != password)
@@ -39,11 +41,7 @@ namespace PokeShop.Application.Services
                 await _repository.UpdateUserFirstLogin();
             }
             
-            return new LoginResultDto(
-                "Login succeed",
-                user.UserName,
-                user.Coins
-            );
+            return new LoginResultDto("Login succeed", user.UserName, user.Coins);
         }
     }
 } 

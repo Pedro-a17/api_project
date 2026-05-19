@@ -1,6 +1,4 @@
 ﻿using System.Text;
-using PokeShop.Models;
-
 class PopulatePokeShopScript
 {
     static void Main()
@@ -26,8 +24,15 @@ class PopulatePokeShopScript
         string binDir = AppDomain.CurrentDomain.BaseDirectory;
 
         //Sobe até a raiz da solução e entra na pasta da API
-        string apiDataPath = Path.GetFullPath(Path.Combine(binDir, "..", "..", "..", "..", "..", "src", "PokeShop.API", "Seed"));
-        using (StreamWriter sw = new StreamWriter("PopulatePokeShop.sql", false, utf8NoBom))
+        string apiDataPath = Path.GetFullPath(Path.Combine(binDir, "..", "..", "..", "..", "..", "src", "PokeShop.API", "Seed", "PopulatePokeShop.sql"));
+
+        string? directory = Path.GetDirectoryName(apiDataPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        using (StreamWriter sw = new StreamWriter(apiDataPath, false, utf8NoBom))
         {
             sw.WriteLine("USE PokeShopDb;");
             sw.WriteLine("SET FOREIGN_KEY_CHECKS = 0;");
@@ -90,3 +95,4 @@ class PopulatePokeShopScript
         }
     }
 }
+

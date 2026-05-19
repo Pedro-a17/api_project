@@ -20,4 +20,10 @@
     <ProjectReference Include="..\PokeShop.Infra\PokeShop.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Seed\PopulatePokeShop.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
