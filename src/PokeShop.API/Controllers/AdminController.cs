@@ -211,7 +211,7 @@ namespace PokeShop.Controllers
             }
         }
 
-        [HttpPatch("pokemoncenter/update/{id}")]
+        [HttpPut("pokemoncenter/update/{id}")]
         public async Task<ActionResult<ResultDto<PokemonCenterManagementResponseDto>>> UpdatePokemonCenterMarketPriceAsync(int id, [FromBody] PokemonCenterManagementUpdateDto dto)
         {
             try

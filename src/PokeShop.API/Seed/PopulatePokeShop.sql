@@ -28,6 +28,10 @@ INSERT INTO Elements (Id, Name) VALUES (18, 'Fairy');
 
 -- Users
 INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (1, 'admin','1010', 0, 0);
+INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (2, 'ash','1234', 200, 1);
+INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (3, 'brock','4321', 0, 0);
+INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (4, 'misty','5678', 20, 1);
+INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (5, 'red','8765', 0, 0);
 
 -- Pokémons and PokemonElements
 INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('Pikachu', 'Modest', 1, NULL);

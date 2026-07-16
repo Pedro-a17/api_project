@@ -26,7 +26,7 @@ namespace PokeShop.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return StatusCode(500, new { message = ex.Message });
             }
         }  
     }

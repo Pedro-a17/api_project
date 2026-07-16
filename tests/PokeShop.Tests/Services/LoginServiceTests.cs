@@ -10,18 +10,26 @@ namespace PokeShop.Tests.Services
     {
         private readonly Mock<ILoginRepository> _repoMock;
         private readonly LoginService _service;
+        private readonly User _user;
 
         public LoginServiceTests()
         {
             _repoMock = new Mock<ILoginRepository>();
             _service = new LoginService(_repoMock.Object);
+            _user = new User
+            {
+                UserName = "Ash",
+                PasswordHash = "1234",
+                Coins = 0,
+                FirstLogin = false
+            };
         }
 
         [Fact]
-        public async Task LoginAsync_AssertCreatingUserWhenNull()
+        public async Task LoginAsync_UserDoesNotExist_CreatesNewUser()
         {
             // Arrange
-            var username = "Ash";
+            var username = "Misty";
             var password = "0303";
         
             _repoMock.Setup(r => r.GetUserByUserNameAsync(username))
@@ -40,21 +48,14 @@ namespace PokeShop.Tests.Services
         }
 
         [Fact]
-        public async Task LoginAsync_AssertThrowingArgumentExceptionWhenPasswordIsIncorrect()
+        public async Task LoginAsync_WrongPassword_ThrowsArgumentException()
         {
             //Arrange
             var username = "Ash";
-            var correctPassword = "0303";
             var wrongPassword = "Charizard132";
 
-            User user = new User()
-            {
-                UserName = username,
-                PasswordHash = correctPassword,
-            };
-
             _repoMock.Setup(r => r.GetUserByUserNameAsync(username))
-                .ReturnsAsync(user);
+                .ReturnsAsync(_user);
 
             //Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.LoginAsync(username, wrongPassword));
@@ -66,20 +67,13 @@ namespace PokeShop.Tests.Services
         }
 
         [Fact]
-        public async Task LoginAsync_AssertReceivingFirstLoginBonus()
+        public async Task LoginAsync_BonusNotYetClaimed_AwardsBonusAndSetsFlagToTrue()
         {
             // Arrange
             var username = "Ash";
-            var password = "0303";
-            var user = new User
-            {
-                UserName = username,
-                PasswordHash = password,
-                Coins = 0,
-                FirstLogin = false
-            }; 
+            var password = "1234";
 
-            _repoMock.Setup(r => r.GetUserByUserNameAsync(username)).ReturnsAsync(user);
+            _repoMock.Setup(r => r.GetUserByUserNameAsync(username)).ReturnsAsync(_user);
 
             // Act
             var result = await _service.LoginAsync(username, password);

@@ -23,6 +23,11 @@ namespace PokeShop.Infra.Data
             //         "Id <> 1 OR IsActive = 1"      
             //     ));
 
+            // modelBuilder.Entity<PokemonCenter>(entity =>
+            // {
+            //     entity.ToTable(t => t.HasCheckConstraint("CK_PokemonCenter_MarketPrice_Min", "[MarketPrice] >= 0"));
+            // });
+
             modelBuilder.Entity<User>()
                 .HasQueryFilter(u => u.IsActive);
 
