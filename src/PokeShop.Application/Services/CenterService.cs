@@ -17,7 +17,6 @@ namespace PokeShop.Application.Services
                 .Select(pc => new AvailablePokemonDto(
                     pc.PokemonId,
                     pc.Pokemon.Name,
-                    pc.Pokemon.Nature,
                     pc.Pokemon.Elements.Select(e => e.Name),
                     pc.MarketPrice,
                     pc.Pokemon.Rarity.Name
@@ -27,7 +26,7 @@ namespace PokeShop.Application.Services
                 return pokemonsOnCenterProjected;
         }
 
-        public async Task<BuyResultDto> BuyPokemonAsync(int pokemonCenterId, int userId)
+        public async Task<BuyResultDto> BuyPokemonAsync(Guid pokemonCenterId, Guid userId)
         {
             var outPokemonCenter = await _repository.GetPokemonCenterByIdAsync(pokemonCenterId)
                 ?? throw new KeyNotFoundException("Pokémon not found");
@@ -61,7 +60,6 @@ namespace PokeShop.Application.Services
             return new BuyResultDto(
                 user.Id,
                 outPokemonCenter.Pokemon.Name,
-                outPokemonCenter.Pokemon.Nature,
                 outPokemonCenter.Pokemon.Elements.Select(e => e.Name).ToList(),
                 outPokemonCenter.Pokemon.Rarity.Name,
                 value,
@@ -69,7 +67,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<PokeballDto> BuyPokeballAsync(int userId)
+        public async Task<PokeballDto> BuyPokeballAsync(Guid userId)
         {
             var user = await _repository.GetUserByIdAsync(userId)
                 ?? throw new KeyNotFoundException("User not found");
@@ -105,7 +103,6 @@ namespace PokeShop.Application.Services
                 "Poké Ball",
                 rarity,
                 randomPokemon.Name,
-                randomPokemon.Nature,
                 randomPokemon.Elements.Select(e => e.Name).ToList(),
                 randomPokemon.Rarity.Price,
                 user.Id,

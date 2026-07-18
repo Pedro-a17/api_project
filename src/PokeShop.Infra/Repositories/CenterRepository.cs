@@ -15,7 +15,7 @@ namespace PokeShop.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PokemonCenter?> GetPokemonCenterByIdAsync(int id)
+        public async Task<PokemonCenter?> GetPokemonCenterByIdAsync(Guid id)
         {
             return await _context.PokemonCenter
                 .Include(pc => pc.Pokemon).ThenInclude(p => p.Elements)
@@ -24,7 +24,7 @@ namespace PokeShop.Infra.Repositories
                 .FirstOrDefaultAsync(pc => pc.PokemonId == id);
         }
 
-        public async Task<User?> GetUserByIdAsync(int id)
+        public async Task<User?> GetUserByIdAsync(Guid id)
         {
             return await _context.Users.FindAsync(id);
         }

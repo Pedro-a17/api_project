@@ -6,8 +6,8 @@ namespace PokeShop.Application.Interfaces
     {
         Task<IEnumerable<AvailablePokemonDto>> GetAvailablePokemonsAsync();
 
-        Task<BuyResultDto> BuyPokemonAsync(int pokemonCenterId, int userId);
+        Task<BuyResultDto> BuyPokemonAsync(Guid pokemonCenterId, Guid userId);
 
-        Task<PokeballDto> BuyPokeballAsync(int userId);
+        Task<PokeballDto> BuyPokeballAsync(Guid userId);
     }
 }

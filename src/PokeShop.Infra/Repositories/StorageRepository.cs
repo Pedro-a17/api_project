@@ -9,7 +9,7 @@ namespace PokeShop.Infra.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Pokemon>> GetUserInventoryAsListAsync(int userId)
+        public async Task<IEnumerable<Pokemon>> GetUserInventoryAsListAsync(Guid userId)
         {
             return await _context.Pokemons
                 .AsNoTracking()
@@ -19,7 +19,7 @@ namespace PokeShop.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsAsListAsync(int userId)
+        public async Task<IEnumerable<Transaction>> GetTransactionsAsListAsync(Guid userId)
         {
             return await _context.Transactions
                 .Where(t => t.UserId == userId)
@@ -28,7 +28,7 @@ namespace PokeShop.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Pokemon?> GetPokemonById(int id)
+        public async Task<Pokemon?> GetPokemonById(Guid id)
         {
             return await _context.Pokemons
                 .Include(p => p.Owner)
@@ -37,22 +37,22 @@ namespace PokeShop.Infra.Repositories
                 .FirstOrDefaultAsync(up => up.Id == id);
         }
 
-        public async Task<User?> GetUserById(int id)
+        public async Task<User?> GetUserById(Guid id)
         {
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<bool> UserExistsByIdAsync(int id)
+        public async Task<bool> UserExistsByIdAsync(Guid id)
         {
             return await _context.Users.AnyAsync(u => u.Id == id);
         }
 
-        public async Task<bool> UserOwnsSomeInventary(int id)
+        public async Task<bool> UserOwnsSomeInventary(Guid id)
         {
             return await _context.Pokemons.AnyAsync(p => p.OwnerId == id);
         }
 
-        public async Task<PokemonCenter?> GetPokemonCenterByIdAsync(int id)
+        public async Task<PokemonCenter?> GetPokemonCenterByIdAsync(Guid id)
         {
             return await _context.PokemonCenter  
                 .FindAsync(id);

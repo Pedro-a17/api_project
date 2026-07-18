@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PokeShop.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class NomeDaMigration : Migration
+    public partial class CreateDbCorrected : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,8 +50,7 @@ namespace PokeShop.Infra.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     UserName = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PasswordHash = table.Column<string>(type: "longtext", nullable: false)
@@ -63,6 +62,7 @@ namespace PokeShop.Infra.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.CheckConstraint("CK_User_Coins_NotNegative", "`Coins` >= 0");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -70,14 +70,11 @@ namespace PokeShop.Infra.Migrations
                 name: "Pokemons",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Nature = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     RarityId = table.Column<int>(type: "int", nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: true)
+                    OwnerId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -93,7 +90,7 @@ namespace PokeShop.Infra.Migrations
                         column: x => x.OwnerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -101,12 +98,13 @@ namespace PokeShop.Infra.Migrations
                 name: "PokemonCenter",
                 columns: table => new
                 {
-                    PokemonId = table.Column<int>(type: "int", nullable: false),
+                    PokemonId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     MarketPrice = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PokemonCenter", x => x.PokemonId);
+                    table.CheckConstraint("CK_PokemonCenter_MarketPrice_Min", "`MarketPrice` >= 0");
                     table.ForeignKey(
                         name: "FK_PokemonCenter_Pokemons_PokemonId",
                         column: x => x.PokemonId,
@@ -121,7 +119,7 @@ namespace PokeShop.Infra.Migrations
                 columns: table => new
                 {
                     ElementsId = table.Column<int>(type: "int", nullable: false),
-                    PokemonId = table.Column<int>(type: "int", nullable: false)
+                    PokemonId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -145,10 +143,9 @@ namespace PokeShop.Infra.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    PokemonId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    PokemonId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     TransactionDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Status = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),

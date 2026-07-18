@@ -2,8 +2,8 @@ namespace PokeShop.Application.DTOs.Center
 {
     public class BuyRequestDto
     {
-        public int PokemonCenterId { get; set; }
+        public Guid PokemonCenterId { get; set; }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

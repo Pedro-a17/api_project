@@ -2,13 +2,13 @@ namespace PokeShop.Domain.Interfaces
 {
     public interface IStorageRepository
     {
-        Task<IEnumerable<Pokemon>> GetUserInventoryAsListAsync(int userId);
-        Task<IEnumerable<Transaction>> GetTransactionsAsListAsync(int userId);
-        Task<Pokemon?> GetPokemonById(int id);
-        Task<User?> GetUserById(int id);
-        Task<bool> UserExistsByIdAsync(int id);
-        Task<bool> UserOwnsSomeInventary(int id);
-        Task<PokemonCenter?> GetPokemonCenterByIdAsync(int id);
+        Task<IEnumerable<Pokemon>> GetUserInventoryAsListAsync(Guid userId);
+        Task<IEnumerable<Transaction>> GetTransactionsAsListAsync(Guid userId);
+        Task<Pokemon?> GetPokemonById(Guid id);
+        Task<User?> GetUserById(Guid id);
+        Task<bool> UserExistsByIdAsync(Guid id);
+        Task<bool> UserOwnsSomeInventary(Guid id);
+        Task<PokemonCenter?> GetPokemonCenterByIdAsync(Guid id);
         Task SaveSellAsync(Transaction transaction, PokemonCenter? pokemonToReturn = null);
     }
 }

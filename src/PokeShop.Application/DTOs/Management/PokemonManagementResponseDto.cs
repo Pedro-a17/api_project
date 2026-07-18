@@ -1,6 +1,6 @@
 namespace PokeShop.Application.DTOs.Management
 {
-    public record class PokemonManagementResponseDto(int Id, string Name,
-        string Nature, IEnumerable<Element> Elements,
-        int RarityId, int? OwnerId);
+    public record class PokemonManagementResponseDto(Guid Id, string Name,
+        IEnumerable<Element> Elements,
+        int RarityId, Guid? OwnerId);
 }

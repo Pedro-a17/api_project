@@ -18,10 +18,11 @@ namespace PokeShop.Application.Services
         public async Task<LoginResultDto> LoginAsync(string username, string password)
         {
             var user = await _repository.GetUserByUserNameAsync(username);
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
             if (user == null)
             {
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+                
                 user = new User
                 {
                     UserName = username,
@@ -31,11 +32,9 @@ namespace PokeShop.Application.Services
                 };
 
                 await _repository.CreateUserAsync(user);
-                
-                return new LoginResultDto("Login succeed", user.UserName, user.Coins);
             }
 
-            if (user.PasswordHash != passwordHash)
+            if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
                 throw new ArgumentException("Password is incorrect");
 
             if (!user.FirstLogin)
@@ -46,6 +45,7 @@ namespace PokeShop.Application.Services
                 await _repository.UpdateUserFirstLogin();
             }
             
+            string jwt = _token.jwtTokenGenerator(user.Id);
             return new LoginResultDto("Login succeed", user.UserName, user.Coins);
         }
     }

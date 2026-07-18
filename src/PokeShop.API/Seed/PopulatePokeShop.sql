@@ -27,40 +27,19 @@ INSERT INTO Elements (Id, Name) VALUES (17, 'Steel');
 INSERT INTO Elements (Id, Name) VALUES (18, 'Fairy');
 
 -- Users
-INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (1, 'admin','1010', 0, 0);
-INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (2, 'ash','1234', 200, 1);
-INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (3, 'brock','4321', 0, 0);
-INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (4, 'misty','5678', 20, 1);
-INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (5, 'red','8765', 0, 0);
+INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES ('ea128a93-f0cd-4bcf-9d72-bcd50babf4fa', 'admin','37b01d52-7bfb-4ec4-94e0-f2c38d6df11c', 0, 0);
 
 -- Pokémons and PokemonElements
-INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('Pikachu', 'Modest', 1, NULL);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (4, 1);
-INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('Caterpie', 'Adamant', 1, NULL);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (12, 2);
-INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('Charizard', 'Timid', 3, NULL);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (2, 3);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (10, 3);
-INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('Rayquaza', 'Jolly', 4, NULL);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (15, 4);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (10, 4);
-INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('Bisharp', 'Serious', 3, NULL);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (16, 5);
-INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (17, 5);
-
--- PokemonCenter
-INSERT INTO PokemonCenter (PokemonId, MarketPrice) 
-                    SELECT p.Id, r.Price 
-                    FROM Pokemons p 
-                    JOIN Rarities r ON p.RarityId = r.Id 
-                    WHERE p.Id = 1;
-INSERT INTO PokemonCenter (PokemonId, MarketPrice) 
-                    SELECT p.Id, r.Price 
-                    FROM Pokemons p 
-                    JOIN Rarities r ON p.RarityId = r.Id 
-                    WHERE p.Id = 2;
-INSERT INTO PokemonCenter (PokemonId, MarketPrice) 
-                    SELECT p.Id, r.Price 
-                    FROM Pokemons p 
-                    JOIN Rarities r ON p.RarityId = r.Id 
-                    WHERE p.Id = 3;
+INSERT INTO Pokemons (Id, Name, RarityId, OwnerId) VALUES ('9deceb54-6ae7-4777-bc31-756bcb486533', 'Pikachu', 1, NULL);
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (4, '9deceb54-6ae7-4777-bc31-756bcb486533');
+INSERT INTO Pokemons (Id, Name, RarityId, OwnerId) VALUES ('fdfdb933-0262-4568-99a5-47bd13d14223', 'Caterpie', 1, NULL);
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (12, 'fdfdb933-0262-4568-99a5-47bd13d14223');
+INSERT INTO Pokemons (Id, Name, RarityId, OwnerId) VALUES ('92150894-a28d-435e-b25f-d38deb114b44', 'Charizard', 3, NULL);
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (2, '92150894-a28d-435e-b25f-d38deb114b44');
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (10, '92150894-a28d-435e-b25f-d38deb114b44');
+INSERT INTO Pokemons (Id, Name, RarityId, OwnerId) VALUES ('678de2f3-f5ff-48f0-91cf-4b082eb16b86', 'Rayquaza', 4, NULL);
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (15, '678de2f3-f5ff-48f0-91cf-4b082eb16b86');
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (10, '678de2f3-f5ff-48f0-91cf-4b082eb16b86');
+INSERT INTO Pokemons (Id, Name, RarityId, OwnerId) VALUES ('fa993d80-de8e-4c99-9844-b9e65804f606', 'Bisharp', 3, NULL);
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (16, 'fa993d80-de8e-4c99-9844-b9e65804f606');
+INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES (17, 'fa993d80-de8e-4c99-9844-b9e65804f606');

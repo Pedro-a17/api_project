@@ -12,7 +12,7 @@ namespace PokeShop.Controllers
         public StorageController(IStorageService storageService) => _storageService = storageService;
 
         [HttpGet("inventory/{id}")]
-        public async Task<ActionResult<IEnumerable<EngagedPokemonDto>>> Inventory([FromRoute] int id)
+        public async Task<ActionResult<IEnumerable<EngagedPokemonDto>>> Inventory([FromRoute] Guid id)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpGet("transactions/{id}")]
-        public async Task<ActionResult<IEnumerable<TransactionSummaryDto>>> GetTransactionsAsync([FromRoute] int id)
+        public async Task<ActionResult<IEnumerable<TransactionSummaryDto>>> GetTransactionsAsync([FromRoute] Guid id)
         {
             try
             {

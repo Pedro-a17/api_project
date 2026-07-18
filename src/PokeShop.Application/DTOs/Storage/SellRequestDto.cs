@@ -2,8 +2,8 @@ namespace PokeShop.Application.DTOs.Storage
 {
     public class SellRequestDto
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public int PokemonId { get; set; }
+        public Guid PokemonId { get; set; }
     }
 }

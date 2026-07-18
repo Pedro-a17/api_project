@@ -1,10 +1,10 @@
 ﻿using System.Text;
+using PokeShop.Domain.Enums;
 class PopulatePokeShopScript
 {
     static void Main()
     {
         string[] names = { "Pikachu", "Caterpie", "Charizard", "Rayquaza", "Bisharp" };
-        string[] natures = { "Modest", "Adamant", "Timid", "Jolly", "Serious" };
         
         Elements[][] pokemonTypes = {
             new[] { Elements.Electric },
@@ -16,7 +16,7 @@ class PopulatePokeShopScript
 
         int[] rarityIds = { 1, 1, 3, 4, 3 }; 
 
-        int[] pokemonCenterIds = {1, 2, 3};
+        string adminGuidId = Guid.NewGuid().ToString();
 
         var utf8NoBom = new UTF8Encoding(false);
 
@@ -57,38 +57,24 @@ class PopulatePokeShopScript
 
             // 3. Users
             sw.WriteLine("-- Users");
-            sw.WriteLine("INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES (1, 'admin','1010', 0, 0);");
+            sw.WriteLine($"INSERT INTO Users (Id, UserName, PasswordHash, Coins, FirstLogin) VALUES ('{adminGuidId}', 'admin','37b01d52-7bfb-4ec4-94e0-f2c38d6df11c', 0, 0);");
             sw.WriteLine();
 
             // 4. Pokemons e Elementos
             sw.WriteLine("-- Pokémons and PokemonElements");
             for (int i = 0; i < names.Length; i++)
             {
-                int pId = i + 1;
+                string pokemonGuidId = Guid.NewGuid().ToString();
                 
-                sw.WriteLine($"INSERT INTO Pokemons (Name, Nature, RarityId, OwnerId) VALUES ('{names[i]}', '{natures[i]}', {rarityIds[i]}, NULL);");
+                sw.WriteLine($"INSERT INTO Pokemons (Id, Name, RarityId, OwnerId) VALUES ('{pokemonGuidId}', '{names[i]}', {rarityIds[i]}, NULL);");
 
                 // Vínculos na tabela PokemonElement (conforme sua Migration)
                 foreach (var type in pokemonTypes[i])
                 {
                     int elementId = (int)type + 1;
                     // Nomes confirmados: ElementsId e PokemonId
-                    sw.WriteLine($"INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES ({elementId}, {pId});");
+                    sw.WriteLine($"INSERT INTO PokemonElement (ElementsId, PokemonId) VALUES ({elementId}, '{pokemonGuidId}');");
                 }
-            }
-            sw.WriteLine();
-
-            // 5. PokemonCenter
-            sw.WriteLine("-- PokemonCenter");
-            foreach (var pcId in pokemonCenterIds)
-            {
-                string sql = $@"INSERT INTO PokemonCenter (PokemonId, MarketPrice) 
-                    SELECT p.Id, r.Price 
-                    FROM Pokemons p 
-                    JOIN Rarities r ON p.RarityId = r.Id 
-                    WHERE p.Id = {pcId};";
-
-                sw.WriteLine(sql);
             }
 
             Console.WriteLine("Arquivo PopulatePokeShop.sql gerado com sucesso baseando-se na Migration!");

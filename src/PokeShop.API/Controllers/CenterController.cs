@@ -25,7 +25,6 @@ namespace PokeShop.Controllers
             try
             {
                 var r = await _centerService.BuyPokemonAsync(dto.PokemonCenterId, dto.UserId);
-
                 return Ok(r);
             }
             catch (KeyNotFoundException ex)
@@ -43,7 +42,7 @@ namespace PokeShop.Controllers
         }
         
         [HttpPost("buy-pokeball")]
-        public async Task<ActionResult<PokeballDto>> Pokeball([FromQuery]int userId)
+        public async Task<ActionResult<PokeballDto>> Pokeball([FromQuery]Guid userId)
         {
             try
             {

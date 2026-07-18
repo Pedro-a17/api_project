@@ -35,7 +35,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<UserManagementResponseDto>> GetUserByIdAsync(int targetId)
+        public async Task<ResultDto<UserManagementResponseDto>> GetUserByIdAsync(Guid targetId)
         {
             var user = await _repository.GetUserByIdAsync(targetId) 
                 ?? throw new KeyNotFoundException("User not found");
@@ -81,7 +81,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<UserManagementResponseDto>> UpdateUserAsync(int targetId, UserManagementUpdateDto dto)
+        public async Task<ResultDto<UserManagementResponseDto>> UpdateUserAsync(Guid targetId, UserManagementUpdateDto dto)
         {
             var user = await _repository.GetUserByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("User not found");
@@ -106,26 +106,48 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<UserManagementResponseDto>> DeleteUserAsync(int targetId)
+        public async Task<ResultDto<UserManagementResponseDto>> SoftDeleteUserAsync(Guid targetId)
         {
-            if (targetId == 1) // Regra de negócio: Protege o Admin principal
-                throw new InvalidOperationException("Admin can not be deactivated");
-
             var user = await _repository.GetUserByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("User not found");
 
-            user.IsActive = false;
-            var disabledUser = await _repository.UpdateUserAsync(user);
+            if (user.UserName == "admin") // Regra de negócio: Protege o Admin principal
+                throw new InvalidOperationException("Admin can not be deactivated");
+
+            await _repository.SoftDeleteUserAsync(user);
 
             return new ResultDto<UserManagementResponseDto> 
             (
                 "'Delete' Succeed", 
                 new UserManagementResponseDto(
-                    disabledUser.Id, 
-                    disabledUser.UserName, 
-                    disabledUser.Coins, 
-                    disabledUser.FirstLogin, 
-                    disabledUser.IsActive
+                    user.Id, 
+                    user.UserName, 
+                    user.Coins, 
+                    user.FirstLogin, 
+                    user.IsActive
+                )
+            );
+        }
+
+        public async Task<ResultDto<UserManagementResponseDto>> DeleteUserAsync(Guid targetId)
+        {
+            var user = await _repository.GetUserByIdAsync(targetId)
+                ?? throw new KeyNotFoundException("User not found");
+
+            if (user.UserName == "admin") // Regra de negócio: Protege o Admin principal
+                throw new InvalidOperationException("Admin can not be deactivated");
+
+            await _repository.DeleteUserAsync(user);
+
+            return new ResultDto<UserManagementResponseDto> 
+            (
+                "'Delete' Succeed", 
+                new UserManagementResponseDto(
+                    user.Id, 
+                    user.UserName, 
+                    user.Coins, 
+                    user.FirstLogin, 
+                    user.IsActive
                 )
             );
         }
@@ -139,7 +161,6 @@ namespace PokeShop.Application.Services
                 .Select(p => new PokemonManagementResponseDto(
                     p.Id,
                     p.Name,
-                    p.Nature,
                     p.Elements,
                     p.RarityId,
                     p.OwnerId
@@ -153,7 +174,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<PokemonManagementResponseDto>> GetPokemonByIdAsync(int targetId)
+        public async Task<ResultDto<PokemonManagementResponseDto>> GetPokemonByIdAsync(Guid targetId)
         {
             var pokemon = await _repository.GetPokemonByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("Pokemon not found");
@@ -164,7 +185,6 @@ namespace PokeShop.Application.Services
                 new PokemonManagementResponseDto(
                     pokemon.Id,
                     pokemon.Name,
-                    pokemon.Nature,
                     pokemon.Elements,
                     pokemon.RarityId,
                     pokemon.OwnerId
@@ -180,7 +200,6 @@ namespace PokeShop.Application.Services
             var pokemon = new Pokemon
             {
                 Name = dto.Name,
-                Nature = dto.Nature,
                 RarityId = dto.RarityId,
                 OwnerId = dto.OwnerId,
                 Elements = await _repository.GetElementsByNames(dto.Elements)
@@ -194,7 +213,6 @@ namespace PokeShop.Application.Services
                 new PokemonManagementResponseDto(
                     createdPokemon.Id,
                     createdPokemon.Name,
-                    createdPokemon.Nature,
                     createdPokemon.Elements,
                     createdPokemon.RarityId,
                     createdPokemon.OwnerId
@@ -202,7 +220,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<PokemonManagementResponseDto>> UpdatePokemonAsync(int targetId, PokemonManagementUpdateDto dto)
+        public async Task<ResultDto<PokemonManagementResponseDto>> UpdatePokemonAsync(Guid targetId, PokemonManagementUpdateDto dto)
         {
             var pokemon = await _repository.GetPokemonByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("Pokemon not found");
@@ -222,7 +240,6 @@ namespace PokeShop.Application.Services
             }
 
             pokemon.Name = dto.UpName ?? pokemon.Name;
-            pokemon.Nature = dto.UpNature ?? pokemon.Nature;
             pokemon.RarityId = dto.UpRarityId ?? pokemon.RarityId;
             pokemon.OwnerId = dto.UpOwnerId;
 
@@ -241,7 +258,6 @@ namespace PokeShop.Application.Services
                 new PokemonManagementResponseDto(
                     updatedPokemon.Id,
                     updatedPokemon.Name,
-                    updatedPokemon.Nature,
                     updatedPokemon.Elements,
                     updatedPokemon.RarityId,
                     updatedPokemon.OwnerId
@@ -249,7 +265,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<PokemonManagementResponseDto>> DeletePokemonAsync(int targetId)
+        public async Task<ResultDto<PokemonManagementResponseDto>> DeletePokemonAsync(Guid targetId)
         {
             var pokemon = await _repository.GetPokemonByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("Pokémon does not exist");
@@ -262,7 +278,6 @@ namespace PokeShop.Application.Services
                 new PokemonManagementResponseDto(
                     pokemon.Id,
                     pokemon.Name,
-                    pokemon.Nature,
                     pokemon.Elements,
                     pokemon.RarityId,
                     pokemon.OwnerId
@@ -298,7 +313,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<PokemonCenterManagementResponseDto>> UpdatePokemonCenterMarketPriceAsync(int targetId, PokemonCenterManagementUpdateDto dto)
+        public async Task<ResultDto<PokemonCenterManagementResponseDto>> UpdatePokemonCenterMarketPriceAsync(Guid targetId, PokemonCenterManagementUpdateDto dto)
         {
             var centerEntry = await _repository.GetPokemonCenterByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("Pokémon not in store");
@@ -325,7 +340,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<PokemonCenterManagementResponseDto>> DeletePokemonCenterAsync(int targetId)
+        public async Task<ResultDto<PokemonCenterManagementResponseDto>> DeletePokemonCenterAsync(Guid targetId)
         {
             var pokemonCenter = await _repository.GetPokemonCenterByIdAsync(targetId)
                 ?? throw new KeyNotFoundException("Pokémon not in store");
@@ -438,7 +453,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<TransactionManagementResponseDto>> GetTransactionByIdAsync(int id)
+        public async Task<ResultDto<TransactionManagementResponseDto>> GetTransactionByIdAsync(Guid id)
         {
             var transaction = await _repository.GetTransactionByIdAsync(id);
 
@@ -455,7 +470,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<IEnumerable<TransactionManagementResponseDto>>> GetTransactionsByUserIdAsync(int id)
+        public async Task<ResultDto<IEnumerable<TransactionManagementResponseDto>>> GetTransactionsByUserIdAsync(Guid id)
         {
             var transactions = await _repository.GetTransactionsByUserIdAsync(id);
 
@@ -476,7 +491,7 @@ namespace PokeShop.Application.Services
             );
         }
 
-        public async Task<ResultDto<IEnumerable<TransactionManagementResponseDto>>> GetTransactionsByPokemonIdAsync(int id)
+        public async Task<ResultDto<IEnumerable<TransactionManagementResponseDto>>> GetTransactionsByPokemonIdAsync(Guid id)
         {
             var transactions = await _repository.GetTransactionsByPokemonIdAsync(id);
 

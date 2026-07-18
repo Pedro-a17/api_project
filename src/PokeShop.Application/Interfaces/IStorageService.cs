@@ -4,10 +4,10 @@ namespace PokeShop.Application.Interfaces
 {
     public interface IStorageService
     {
-        Task<IEnumerable<EngagedPokemonDto>> GetInventoryAsync(int userId);
+        Task<IEnumerable<EngagedPokemonDto>> GetInventoryAsync(Guid userId);
 
-        Task<IEnumerable<TransactionSummaryDto>> GetTransactionsAsync(int userId);
+        Task<IEnumerable<TransactionSummaryDto>> GetTransactionsAsync(Guid userId);
 
-        Task<SellResultDto> SellPokemonAsync(int pokemonId, int userId);
+        Task<SellResultDto> SellPokemonAsync(Guid pokemonId, Guid userId);
     }
 }

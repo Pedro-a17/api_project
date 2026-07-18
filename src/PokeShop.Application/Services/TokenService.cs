@@ -12,7 +12,7 @@ namespace PokeShop.Application.Services
 
         public TokenService(IConfiguration configuration) => _config = configuration;
 
-        public string jwtTokenGenerator(string userId)
+        public string jwtTokenGenerator(Guid userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = _config["JwtSettings:Secret"];

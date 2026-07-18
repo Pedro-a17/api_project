@@ -2,7 +2,7 @@ namespace PokeShop.Application.Interfaces
 {
     public interface ITokenService
     {
-      string jwtTokenGenerator(string userId);
+      string jwtTokenGenerator(Guid userId);
     }
 }
 

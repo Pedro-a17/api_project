@@ -1,5 +1,5 @@
 namespace PokeShop.Application.DTOs.Center
 {
-    public record class AvailablePokemonDto (int PokemonCenterId, string Name, 
-        string Nature, IEnumerable<Elements> Elements, int MarketValue, Rarities Rarity);
+    public record class AvailablePokemonDto (Guid PokemonCenterId, string Name, 
+        IEnumerable<Elements> Elements, int MarketValue, Rarities Rarity);
 }

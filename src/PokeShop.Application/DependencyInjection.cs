@@ -11,6 +11,7 @@ namespace PokeShop.Application
             services.AddScoped<ICenterService, CenterService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }

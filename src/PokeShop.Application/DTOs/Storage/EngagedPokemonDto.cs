@@ -1,6 +1,6 @@
 namespace PokeShop.Application.DTOs.Storage
 {
-    public record class EngagedPokemonDto(int UserPokemonId, string Name, 
-        string Nature, IReadOnlyList<Elements> Elements, 
+    public record class EngagedPokemonDto(Guid UserPokemonId, string Name, 
+        IReadOnlyList<Elements> Elements, 
         int MarketValue, Rarities Rarity);
 }

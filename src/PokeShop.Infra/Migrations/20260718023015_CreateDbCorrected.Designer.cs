@@ -11,8 +11,8 @@ using PokeShop.Infra.Data;
 namespace PokeShop.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260504035244_NomeDaMigration")]
-    partial class NomeDaMigration
+    [Migration("20260718023015_CreateDbCorrected")]
+    partial class CreateDbCorrected
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,8 +27,8 @@ namespace PokeShop.Infra.Migrations
                     b.Property<int>("ElementsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PokemonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PokemonId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("ElementsId", "PokemonId");
 
@@ -57,20 +57,16 @@ namespace PokeShop.Infra.Migrations
 
             modelBuilder.Entity("PokeShop.Domain.Models.Pokemon", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Nature")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("RarityId")
                         .HasColumnType("int");
@@ -86,15 +82,18 @@ namespace PokeShop.Infra.Migrations
 
             modelBuilder.Entity("PokeShop.Domain.Models.PokemonCenter", b =>
                 {
-                    b.Property<int>("PokemonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PokemonId")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("MarketPrice")
                         .HasColumnType("int");
 
                     b.HasKey("PokemonId");
 
-                    b.ToTable("PokemonCenter");
+                    b.ToTable("PokemonCenter", t =>
+                        {
+                            t.HasCheckConstraint("CK_PokemonCenter_MarketPrice_Min", "`MarketPrice` >= 0");
+                        });
                 });
 
             modelBuilder.Entity("PokeShop.Domain.Models.Rarity", b =>
@@ -117,16 +116,16 @@ namespace PokeShop.Infra.Migrations
 
             modelBuilder.Entity("PokeShop.Domain.Models.Transaction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CoinsAdjustment")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("PokemonId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("PokemonId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -135,8 +134,8 @@ namespace PokeShop.Infra.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -151,9 +150,9 @@ namespace PokeShop.Infra.Migrations
 
             modelBuilder.Entity("PokeShop.Domain.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Coins")
                         .HasColumnType("int");
@@ -179,7 +178,10 @@ namespace PokeShop.Infra.Migrations
                     b.HasIndex("UserName")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", t =>
+                        {
+                            t.HasCheckConstraint("CK_User_Coins_NotNegative", "`Coins` >= 0");
+                        });
                 });
 
             modelBuilder.Entity("ElementPokemon", b =>
@@ -202,7 +204,7 @@ namespace PokeShop.Infra.Migrations
                     b.HasOne("PokeShop.Domain.Models.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PokeShop.Domain.Models.Rarity", "Rarity")
                         .WithMany()

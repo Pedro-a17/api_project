@@ -22,7 +22,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpGet("user/{id}", Name = "GetUserById")]
-        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> GetUserByIdAsync(int id)
+        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> GetUserByIdAsync(Guid id)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpPatch("user/update/{id}")]
-        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> UpdateUserAsync(int id, [FromBody] UserManagementUpdateDto dto)
+        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> UpdateUserAsync(Guid id, [FromBody] UserManagementUpdateDto dto)
         {
             try
             {
@@ -79,8 +79,27 @@ namespace PokeShop.Controllers
             }
         }
 
+        [HttpDelete("user/softdelete/{id}")]
+        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> SoftDeleteUserAsync(Guid id)
+        {
+            try
+            {
+                var deletedUser = await _adminService.SoftDeleteUserAsync(id);
+
+                return Ok(deletedUser);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpDelete("user/delete/{id}")]
-        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> DeleteUserAsync(int id)
+        public async Task<ActionResult<ResultDto<UserManagementResponseDto>>> DeleteUserAsync(Guid id)
         {
             try
             {
@@ -108,7 +127,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpGet("pokemon/{id}", Name = "GetPokemonById")]
-        public async Task<ActionResult<ResultDto<PokemonManagementResponseDto>>> GetPokemonByIdAsync(int id)
+        public async Task<ActionResult<ResultDto<PokemonManagementResponseDto>>> GetPokemonByIdAsync(Guid id)
         {
             try
             {
@@ -151,7 +170,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpPatch("pokemon/update/{id}")]
-        public async Task<ActionResult<ResultDto<PokemonManagementResponseDto>>> UpdatePokemonAsync(int id, [FromBody] PokemonManagementUpdateDto dto)
+        public async Task<ActionResult<ResultDto<PokemonManagementResponseDto>>> UpdatePokemonAsync(Guid id, [FromBody] PokemonManagementUpdateDto dto)
         {
             try
             {
@@ -169,7 +188,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpDelete("pokemon/delete/{id}")]
-        public async Task<ActionResult<ResultDto<PokemonManagementResponseDto>>> DeletePokemonAsync(int id)
+        public async Task<ActionResult<ResultDto<PokemonManagementResponseDto>>> DeletePokemonAsync(Guid id)
         {
             try
             {
@@ -212,7 +231,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpPut("pokemoncenter/update/{id}")]
-        public async Task<ActionResult<ResultDto<PokemonCenterManagementResponseDto>>> UpdatePokemonCenterMarketPriceAsync(int id, [FromBody] PokemonCenterManagementUpdateDto dto)
+        public async Task<ActionResult<ResultDto<PokemonCenterManagementResponseDto>>> UpdatePokemonCenterMarketPriceAsync(Guid id, [FromBody] PokemonCenterManagementUpdateDto dto)
         {
             try
             {
@@ -231,7 +250,7 @@ namespace PokeShop.Controllers
 
 
         [HttpDelete("pokemoncenter/delete/{id}")]
-        public async Task<ActionResult<ResultDto<PokemonCenterManagementResponseDto>>> DeletePokemonCenterAsync(int id)
+        public async Task<ActionResult<ResultDto<PokemonCenterManagementResponseDto>>> DeletePokemonCenterAsync(Guid id)
         {
             try
             {
@@ -282,7 +301,7 @@ namespace PokeShop.Controllers
         
 
         [HttpGet("transaction/{id}", Name = "GetTransactionById")]
-        public async Task<ActionResult<ResultDto<TransactionManagementResponseDto>>> GetTransactionByIdAsync(int id)
+        public async Task<ActionResult<ResultDto<TransactionManagementResponseDto>>> GetTransactionByIdAsync(Guid id)
         {
             try
             {
@@ -301,7 +320,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpGet("transactions/user/{id}", Name = "GetTransactionsByUserId")]
-        public async Task<ActionResult<ResultDto<IEnumerable<TransactionManagementResponseDto>>>> GetTransactionsByUserIdAsync(int id)
+        public async Task<ActionResult<ResultDto<IEnumerable<TransactionManagementResponseDto>>>> GetTransactionsByUserIdAsync(Guid id)
         {
             try
             {
@@ -320,7 +339,7 @@ namespace PokeShop.Controllers
         }
 
         [HttpGet("transactions/pokemon/{id}", Name = "GetTransactionsByPokemonId")]
-        public async Task<ActionResult<ResultDto<IEnumerable<TransactionManagementResponseDto>>>> GetTransactionsByPokemonIdAsync(int id)
+        public async Task<ActionResult<ResultDto<IEnumerable<TransactionManagementResponseDto>>>> GetTransactionsByPokemonIdAsync(Guid id)
         {
             try
             {

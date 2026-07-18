@@ -11,7 +11,7 @@ namespace PokeShop.Application.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<EngagedPokemonDto>> GetInventoryAsync(int userId)
+        public async Task<IEnumerable<EngagedPokemonDto>> GetInventoryAsync(Guid userId)
         {
             if (!await _repository.UserExistsByIdAsync(userId))
                 throw new KeyNotFoundException("User does not exist");
@@ -28,7 +28,6 @@ namespace PokeShop.Application.Services
                 .Select(p => new EngagedPokemonDto(
                     p.Id,
                     p.Name,
-                    p.Nature,
                     p.Elements.Select(e => e.Name).ToList(),
                     p.Rarity.Price,
                     p.Rarity.Name
@@ -36,7 +35,7 @@ namespace PokeShop.Application.Services
                 .ToList();
         }
 
-        public async Task<IEnumerable<TransactionSummaryDto>> GetTransactionsAsync(int userId)
+        public async Task<IEnumerable<TransactionSummaryDto>> GetTransactionsAsync(Guid userId)
         {
             if (!await _repository.UserExistsByIdAsync(userId))
                 throw new KeyNotFoundException("User does not exist");
@@ -54,7 +53,7 @@ namespace PokeShop.Application.Services
             return transactionsProjected;
         }
 
-        public async Task<SellResultDto> SellPokemonAsync(int userId, int pokemonId)
+        public async Task<SellResultDto> SellPokemonAsync(Guid userId, Guid pokemonId)
         {
 
             var pokemon = await _repository.GetPokemonById(pokemonId);
@@ -98,7 +97,6 @@ namespace PokeShop.Application.Services
             return new SellResultDto(
                 user.UserName,
                 pokemon.Name,
-                pokemon.Nature,
                 pokemon.Elements.Select(e => e.Name).ToList(),
                 pokemon.Rarity.Name,
                 pokemonPrice,

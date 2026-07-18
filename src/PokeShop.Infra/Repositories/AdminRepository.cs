@@ -11,22 +11,22 @@ namespace PokeShop.Infra.Repositories
         //users
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.IgnoreQueryFilters().ToListAsync();
         }
 
-        public async Task<User?> GetUserByIdAsync(int id)
+        public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users.IgnoreQueryFilters().FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<bool> UserExistsByIdAsync(int id)
+        public async Task<bool> UserExistsByIdAsync(Guid id)
         {
-            return await _context.Users.AnyAsync(u => u.Id == id);
+            return await _context.Users.IgnoreQueryFilters().AnyAsync(u => u.Id == id);
         }
 
         public async Task<bool> UserExistsByNameAsync(string username)
         {
-            return await _context.Users.AnyAsync(u => u.UserName == username);
+            return await _context.Users.IgnoreQueryFilters().AnyAsync(u => u.UserName == username);
         }
 
         public async Task<User> CreateUserAsync(User user)
@@ -42,6 +42,20 @@ namespace PokeShop.Infra.Repositories
             return user;
         }
 
+        public async Task SoftDeleteUserAsync(User user)
+        {
+            _context.SoftDelete = true;
+            _context.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {      
+            _context.SoftDelete = false;
+            _context.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+
         //pokemons
         public async Task<IEnumerable<Pokemon>> GetPokemonsAsync()
         {
@@ -52,7 +66,7 @@ namespace PokeShop.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Pokemon?> GetPokemonByIdAsync(int id)
+        public async Task<Pokemon?> GetPokemonByIdAsync(Guid id)
         {
             return await _context.Pokemons
                 .Include(p => p.Owner)
@@ -60,6 +74,7 @@ namespace PokeShop.Infra.Repositories
                 .Include(p => p.Rarity)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
         public async Task<List<Element>> GetElementsByNames(List<Elements> elementsNames)
         {
             var elements = await _context.Elements
@@ -69,7 +84,7 @@ namespace PokeShop.Infra.Repositories
             return elements;
         }
 
-        public async Task<bool> PokemonExistsByIdAsync(int id)
+        public async Task<bool> PokemonExistsByIdAsync(Guid id)
         {
             return await _context.Pokemons.AnyAsync(p => p.Id == id);
         }
@@ -96,14 +111,14 @@ namespace PokeShop.Infra.Repositories
         }
 
         //pokemonCenter
-        public async Task<PokemonCenter?> GetPokemonCenterByIdAsync(int id)
+        public async Task<PokemonCenter?> GetPokemonCenterByIdAsync(Guid id)
         {
             return await _context.PokemonCenter
                 .Include(pc => pc.Pokemon)
                 .FirstOrDefaultAsync(pc => pc.PokemonId == id);
         }
 
-        public async Task<bool> PokemonCenterExistsById(int id)
+        public async Task<bool> PokemonCenterExistsById(Guid id)
         {
             return await _context.PokemonCenter.AnyAsync(pc => pc.PokemonId == id);
         }
@@ -143,6 +158,7 @@ namespace PokeShop.Infra.Repositories
         public async Task<IEnumerable<Transaction>> GetTransactionsHistoryAsync(Expression<Func<Transaction, bool>> filter)
         {
             return await _context.Transactions
+                .IgnoreQueryFilters()
                 .Where(filter)
                 .Include(t => t.Pokemon)
                 .Include(t => t.User)
@@ -150,25 +166,31 @@ namespace PokeShop.Infra.Repositories
                 .ToListAsync();
         }
         
-        public async Task<Transaction?> GetTransactionByIdAsync(int id)
+        public async Task<Transaction?> GetTransactionByIdAsync(Guid id)
         {
             return await _context.Transactions
+                .IgnoreQueryFilters()
                 .Include(t => t.User)
                 .Include(t => t.Pokemon)
                 .FirstOrDefaultAsync(t => t.PokemonId == id);
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByUserIdAsync(int id)
+        public async Task<IEnumerable<Transaction>> GetTransactionsByUserIdAsync(Guid id)
         {
             return await _context.Transactions
+                .IgnoreQueryFilters()
                 .Where(t => t.UserId == id)
+                .Include(t => t.User)
+                .Include(t => t.Pokemon)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByPokemonIdAsync(int id)
+        public async Task<IEnumerable<Transaction>> GetTransactionsByPokemonIdAsync(Guid id)
         {
             return await _context.Transactions
+                .IgnoreQueryFilters()
+                .Include(t => t.User)
                 .Include(t => t.Pokemon)
                     .ThenInclude(p => p.Rarity)
                 .Include(t => t.Pokemon)
