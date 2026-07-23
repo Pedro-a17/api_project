@@ -18,7 +18,21 @@ namespace PokeShop.Controllers
             {
                 var r = await _loginService.LoginAsync(dto.UserName, dto.Password);
 
-                return Ok(r);
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddHours(2)
+                };
+
+                Response.Cookies.Append("jwt", r.Jwt, cookieOptions);
+
+                return Ok(new {
+                    message = r.Message,
+                    userName = r.UserName,
+                    coins = r.Coins
+                });
             }
             catch (ArgumentException ex)
             {

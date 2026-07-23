@@ -49,7 +49,7 @@ function Form({ action, method, inputs, legend }: FormProps){
       .then((response) => {
         return response.json().then((data) => {
           if (!response.ok) throw new Error(data.message || `Http error: ${response.status}`);
-          window.alert(`data sent correctly, ${JSON.stringify(data)}`)
+          console.log(data);
         })
       })
       .catch((error) => {

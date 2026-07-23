@@ -46,7 +46,7 @@ namespace PokeShop.Application.Services
             }
             
             string jwt = _token.jwtTokenGenerator(user.Id);
-            return new LoginResultDto("Login succeed", user.UserName, user.Coins);
+            return new LoginResultDto("Login succeed", user.UserName, user.Coins, jwt);
         }
     }
 } 
